@@ -16,13 +16,12 @@
 # 方案说明
 schema:
   schema_id: double_pinyin_ygnid
-  name: test双拼
+  name: 自微双拼
   version: "1"
   author:
     - Ygnid
   description: |
     自微双拼
-    https://github.com/iDvel/rime-ice
   dependencies:
     - melt_eng        # 英文输入，作为次翻译器挂载到拼音方案
     - radical_pinyin  # 部件拆字，反查及辅码
