@@ -16,12 +16,12 @@
 # 方案说明
 schema:
   schema_id: rime_frost_double_pinyin
-  name: 自微双拼
+  name: 自然码双拼
   version: "1"
   author:
-    - Ygnid
+    - Dvel
   description: |
-    自微双拼
+    雾凇拼音 - 自然码双拼
     https://github.com/iDvel/rime-ice
   dependencies:
     - melt_eng        # 英文输入，作为次翻译器挂载到拼音方案
@@ -167,15 +167,12 @@ translator:
     - xform/^/［/
     - xform/$/］/
   preedit_format:               # preedit_format 影响到输入框的显示和“Shift+回车”上屏的字符
-    - xform/([aoe])(\w)/0$2/
     - xform/([bpmnljqxy])n/$1in/
     - xform/(\w)g/$1eng/
     - xform/(\w)q/$1iu/
     - xform/([gkhvuirzcs])w/$1ua/
     - xform/(\w)w/$1ia/
     - xform/([dtnlgkhjqxyvuirzcs])r/$1uan/
-    - xform/0r/er/
-    - xform/([dtgkhvuirzcs])v/$1ui/
     - xform/(\w)t/$1ve/
     - xform/([gkhvuirzcs])y/$1uai/
     - xform/(\w)y/$1ing/
@@ -193,9 +190,9 @@ translator:
     - xform/(\w)z/$1ei/
     - xform/(\w)x/$1ie/
     - xform/(\w)c/$1iao/
+    - xform/([dtgkhvuirzcs])v/$1ui/
     - xform/(\w)b/$1ou/
     - xform/(\w)m/$1ian/
-    - xform/(\w);/$1ing/
     - xform/([aoe])\1(\w)/$1$2/
     - "xform/(^|[ '])v/$1zh/"
     - "xform/(^|[ '])i/$1ch/"
@@ -291,8 +288,8 @@ radical_reverse_lookup:
 recognizer:
   import_preset: default  # 从 default.yaml 继承通用的
   patterns:  # 再增加方案专有的：
-    punct: "^/([0-9]|10|[A-Za-z;]+)$"    # 响应 symbols_v.yaml 的 symbols
-    radical_lookup: "^uU[a-z;]+$"        # 响应部件拆字的反查，与 radical_lookup/prefix 匹配
+    punct: "^/([0-9]|10|[A-Za-z]+)$"    # 响应 symbols_v.yaml 的 symbols
+    radical_lookup: "^uU[a-z]+$"        # 响应部件拆字的反查，与 radical_lookup/prefix 匹配
     unicode: "^U[a-f0-9]+"              # 脚本将自动获取第 2 个字符 U 作为触发前缀，响应 lua_translator@*unicode，输出 Unicode 字符
     number: "^R[0-9]+[.]?[0-9]*"        # 脚本将自动获取第 2 个字符 R 作为触发前缀，响应 lua_translator@*number_translator，数字金额大写
     gregorian_to_lunar: "^N[0-9]{1,8}"  # 脚本将自动获取第 2 个字符 N 作为触发前缀，响应 lua_translator@*lunar，公历转农历，输入 N20240115 得到「二〇二三年腊月初五」
@@ -308,20 +305,18 @@ key_binder:
 # 拼写设定
 speller:
   # 如果不想让什么标点直接上屏，可以加在 alphabet，或者编辑标点符号为两个及以上的映射
-  alphabet: zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA;`/
+  alphabet: zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA`/
   # initials 定义仅作为始码的按键，排除 ` 让单个的 ` 可以直接上屏
   initials: zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA
   delimiter: " '"  # 第一位<空格>是拼音之间的分隔符；第二位<'>表示可以手动输入单引号来分割拼音。
   algebra:
     - erase/^xx$/
     - derive/^([jqxy])u$/$1v/
-#    - derive/^([aoe])([ioun])$/$1$1$2/
+    - derive/^([aoe])([ioun])$/$1$1$2/
     - xform/^([aoe])(ng)?$/$1$1$2/
-    - derive/^([aoe].*)$/o$1/
-    - xform/^([ae])(.*)$/$1$1$2/
     - xform/iu$/Ⓠ/
     - xform/[iu]a$/Ⓦ/
-    - xform/er$|[uv]an$/Ⓡ/
+    - xform/[uv]an$/Ⓡ/
     - xform/[uv]e$/Ⓣ/
     - xform/ing$|uai$/Ⓨ/
     - xform/^sh/Ⓤ/
@@ -344,6 +339,5 @@ speller:
     - xform/ui$/Ⓥ/
     - xform/(.)ou$/$1Ⓑ/
     - xform/in$/Ⓝ/
-    - xform/ing$/;/
     - xlit/ⓆⓌⓇⓉⓎⓊⒾⓄⓅⓈⒹⒻⒼⒽⓂⒿⒸⓀⓁⓏⓍⓋⒷⓃ/qwrtyuiopsdfghmjcklzxvbn/
     # - abbrev/^(.).+$/$1/  # 首字母简拼，开启后会导致 3 个字母时 kj'x 变成 k'jx 的问题
